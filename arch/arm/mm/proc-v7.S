@@ -58,7 +58,6 @@ ENTRY(cpu_v7_reset)
 	mcr	p15, 0, r1, c1, c0, 0		@ disable MMU
 	mcr     p15, 0, ip, c8, c7, 0           @ invalidate I & D,flush TLB
 	mcr     p15, 0, ip, c7, c5, 6           @ flush BTC
-	dsb
 	isb
 	mov	pc, r0
 ENDPROC(cpu_v7_reset)
@@ -258,7 +257,7 @@ __v7_setup:
 	mcr	p15, 0, r5, c10, c2, 0		@ write PRRR
 	mcr	p15, 0, r6, c10, c2, 1		@ write NMRR
 #endif
-
+	dsb					@ Complete invalidations
 #if defined(CONFIG_ARCH_MSM_SCORPION) && !defined(CONFIG_MSM_SMP)
 	mov     r0, #0x33
 	mcr     p15, 3, r0, c15, c0, 3          @ set L2CR1
